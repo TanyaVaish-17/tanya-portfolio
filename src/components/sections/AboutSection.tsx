@@ -2,11 +2,11 @@
 
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Code2, Rocket, Brain, Heart, Target, Zap } from 'lucide-react'
+import { Code2, Rocket, Brain, Target } from 'lucide-react'
 
 const FACTS = [
   { icon: Code2, label: 'Lines of Code', value: '20K+', color: 'cyan' },
-  { icon: Rocket, label: 'Projects Launched', value: '2+', color: 'purple' },
+  { icon: Rocket, label: 'Projects Launched', value: '10+', color: 'purple' },
   { icon: Brain, label: 'DSA Problems', value: '400+', color: 'pink' },
   { icon: Target, label: 'CGPA', value: '8.89', color: 'blue' },
 ]
@@ -16,6 +16,29 @@ const TRAITS = [
   { icon: '🎨', title: 'Design-Aware', desc: 'Obsessed with clean UX and pixel-perfect interfaces' },
   { icon: '🧩', title: 'Problem Solver', desc: 'Break complex problems into elegant solutions' },
   { icon: '🚀', title: 'Builder Mindset', desc: 'Ship fast, iterate faster, always improving' },
+]
+
+const JOURNEY = [
+  {
+    year: '2024',
+    title: 'Started B.Tech CSE',
+    desc: 'Began exploring programming, DSA and web development',
+  },
+  {
+    year: '2025',
+    title: 'Built Real Projects',
+    desc: 'Developed AI legal assistant, golf platform and portfolio projects',
+  },
+  {
+    year: '2026',
+    title: 'Leadership Programs',
+    desc: 'Selected for Harvard Aspire Leaders and McKinsey Forward',
+  },
+  {
+    year: 'Future',
+    title: 'Startup Vision',
+    desc: 'Building technology that solves real-world problems at scale',
+  },
 ]
 
 function SectionTag({ text }: { text: string }) {
@@ -48,60 +71,70 @@ export default function AboutSection() {
             <span className="gradient-text">Story</span>{' '}
             <span className="text-[var(--text-primary)]">Behind the Code</span>
           </h2>
+          <div className="w-32 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent mx-auto mt-5" />
+
+          <p className="max-w-3xl mx-auto mt-6 text-[var(--text-secondary)] leading-relaxed">
+            I'm a Computer Science student passionate about building products that
+            combine technology, design and real-world impact. My journey started
+            with web development and has expanded into full-stack applications,
+            AI integration and startup innovation.
+          </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left: Text */}
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Left: Highlights + Tags */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="space-y-6"
+            className="space-y-3"
           >
-            <p className="text-[var(--text-secondary)] text-lg leading-relaxed">
-              I&apos;m a{' '}
-              <span className="text-[var(--text-primary)] font-semibold">second-year B.Tech CSE student</span>{' '}
-              at KIET Group of Institutions, Ghaziabad, with a deep passion for{' '}
-              <span className="gradient-text-cyan font-semibold">building web applications</span>{' '}
-              that are both beautiful and functional.
-            </p>
+            <div className="space-y-6">
+  {JOURNEY.map((item, i) => (
+    <motion.div
+      key={i}
+      initial={{ opacity: 0, x: -20 }}
+      animate={isInView ? { opacity: 1, x: 0 } : {}}
+      transition={{ delay: 0.3 + i * 0.15 }}
+      className="flex gap-5"
+    >
+      <div className="flex flex-col items-center">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 flex items-center justify-center text-sm font-bold text-white">
+          {i + 1}
+        </div>
 
-            <p className="text-[var(--text-secondary)] text-lg leading-relaxed">
-              My journey started with curiosity about{' '}
-              <span className="text-[var(--accent-purple)] font-semibold">how the web works</span>, and quickly 
-              evolved into building full-stack products — from an AI-powered legal assistant to a subscription 
-              golf platform. I love turning ideas into{' '}
-              <span className="text-[var(--text-primary)] font-semibold">real, deployed products</span>.
-            </p>
+        {i !== JOURNEY.length - 1 && (
+          <div className="w-px h-16 bg-gradient-to-b from-cyan-500/50 to-transparent mt-2" />
+        )}
+      </div>
 
-            <p className="text-[var(--text-secondary)] text-lg leading-relaxed">
-              Beyond code, I&apos;m selected for{' '}
-              <span className="text-[var(--accent-cyan)] font-semibold">Harvard&apos;s Aspire Leaders Program</span>{' '}
-              and{' '}
-              <span className="text-[var(--accent-cyan)] font-semibold">McKinsey Forward Program</span>, 
-              shaping my leadership mindset alongside technical skills. My long-term goal is to{' '}
-              <span className="gradient-text font-semibold">build my own startup</span>{' '}
-              solving real-world problems at scale.
-            </p>
+      <div className="pb-4">
+        <span className="text-cyan-400 text-sm font-medium">
+          {item.year}
+        </span>
 
-            {/* Interests */}
-            <div className="flex flex-wrap gap-2 pt-2">
-              {['React Ecosystem', 'Full-Stack Dev', 'AI/ML Integration', 'UI/UX Design', 'Open Source', 'DSA', 'Cloud (AWS)', 'Startups'].map(tag => (
+        <h3 className="text-white font-semibold text-lg mt-1">
+          {item.title}
+        </h3>
+
+        <p className="text-[var(--text-muted)] text-sm mt-1">
+          {item.desc}
+        </p>
+      </div>
+    </motion.div>
+  ))}
+</div>
+
+            {/* Interest tags */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.75 }}
+              className="flex flex-wrap gap-2 pt-3"
+            >
+              {['React','Full Stack','AI Integration','AWS','Startups'].map(tag => (
                 <span key={tag} className="tech-badge">{tag}</span>
               ))}
-            </div>
-
-            {/* Fun fact */}
-            <motion.div
-              className="glass border border-[var(--accent-cyan)]/20 rounded-xl p-4 flex gap-3"
-              whileHover={{ borderColor: 'rgba(6,182,212,0.4)', scale: 1.01 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Heart size={20} className="text-pink-400 flex-shrink-0 mt-0.5" />
-              <p className="text-[var(--text-secondary)] text-sm leading-relaxed">
-                <span className="text-[var(--text-primary)] font-semibold">Fun Fact:</span>{' '}
-                I believe the best code is code that you never have to explain — clean, readable, and purposeful.
-              </p>
             </motion.div>
           </motion.div>
 
@@ -110,7 +143,7 @@ export default function AboutSection() {
             initial={{ opacity: 0, x: 40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="space-y-5"
+            className="space-y-4"
           >
             {/* Traits Grid */}
             <div className="grid grid-cols-2 gap-4">
@@ -149,35 +182,12 @@ export default function AboutSection() {
                     className={`glass border rounded-xl p-4 bg-gradient-to-br to-transparent ${cls} text-center`}
                   >
                     <Icon size={20} className={`${cls.split(' ')[0]} mx-auto mb-2`} />
-                    <div className={`font-display font-bold text-2xl ${cls.split(' ')[0]}`}>{fact.value}</div>
+                    <div className={`font-display font-bold text-4xl ${cls.split(' ')[0]}`}>{fact.value}</div>
                     <div className="text-[var(--text-muted)] text-xs mt-0.5">{fact.label}</div>
                   </motion.div>
                 )
               })}
             </div>
-
-            {/* Currently block */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.9 }}
-              className="glass border border-border rounded-xl p-4"
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <Zap size={16} className="text-[var(--accent-cyan)]" />
-                <span className="font-mono text-xs text-[var(--accent-cyan)] uppercase tracking-wider">Currently</span>
-              </div>
-              <ul className="space-y-1.5">
-                {[
-                  '🎓 Studying at KIET, Sem 4',
-                  '💻 Building full-stack web apps',
-                  '📚 Mastering DSA & System Design',
-                  '🌐 Open to frontend internships',
-                ].map(item => (
-                  <li key={item} className="text-[var(--text-secondary)] text-sm font-mono">{item}</li>
-                ))}
-              </ul>
-            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -6,10 +6,8 @@ export interface Project {
   techStack: string[]
   githubUrl: string
   liveUrl: string
-  imageUrl?: string
-  featured: boolean
+  images: string[]
   category: 'frontend' | 'fullstack' | 'backend' | 'ai' | 'other'
-  status: 'completed' | 'in-progress' | 'planned'
 }
 
 export interface Skill {

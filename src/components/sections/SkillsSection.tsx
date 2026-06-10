@@ -4,14 +4,14 @@ import { useState, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { SKILLS_DATA } from '@/lib/data'
 
-type Category = 'all' | 'frontend' | 'languages' | 'tools' | 'learning'
+type Category = 'all' | 'frontend' | 'languages' | 'corecs' | 'tools'
 
 const CATEGORIES: { key: Category; label: string; emoji: string }[] = [
   { key: 'all', label: 'All Skills', emoji: '✨' },
   { key: 'frontend', label: 'Frontend', emoji: '🎨' },
   { key: 'languages', label: 'Languages', emoji: '💻' },
+  { key: 'corecs', label: 'Core CS', emoji: '🧠' },
   { key: 'tools', label: 'Tools & Cloud', emoji: '🛠️' },
-  { key: 'learning', label: 'Learning', emoji: '📚' },
 ]
 
 const SKILL_COLORS = [
@@ -29,12 +29,12 @@ export default function SkillsSection() {
   const isInView = useInView(ref, { once: true, margin: '-100px' })
 
   const allSkills = activeCategory === 'all'
-    ? [
-        ...SKILLS_DATA.frontend.map(s => ({ ...s, category: 'frontend' })),
-        ...SKILLS_DATA.languages.map(s => ({ ...s, category: 'languages' })),
-        ...SKILLS_DATA.tools.map(s => ({ ...s, category: 'tools' })),
-        ...SKILLS_DATA.learning.map(s => ({ ...s, category: 'learning' })),
-      ]
+  ? [
+      ...SKILLS_DATA.frontend.map(s => ({ ...s, category: 'frontend' })),
+      ...SKILLS_DATA.languages.map(s => ({ ...s, category: 'languages' })),
+      ...SKILLS_DATA.corecs.map(s => ({ ...s, category: 'corecs' })),
+      ...SKILLS_DATA.tools.map(s => ({ ...s, category: 'tools' })),
+    ]
     : (SKILLS_DATA[activeCategory as keyof typeof SKILLS_DATA] ?? []).map(s => ({
         ...s,
         category: activeCategory,
@@ -63,9 +63,6 @@ export default function SkillsSection() {
             <span className="text-[var(--text-primary)]">Skills &</span>{' '}
             <span className="gradient-text">Technologies</span>
           </h2>
-          <p className="text-[var(--text-secondary)] mt-4 max-w-xl mx-auto">
-            The tools, frameworks, and languages I use to build exceptional web experiences.
-          </p>
         </motion.div>
 
         {/* Category Filters */}
@@ -116,31 +113,10 @@ export default function SkillsSection() {
                     {skill.name}
                   </p>
                   
-                  {/* Learning indicator */}
-                  {skill.category === 'learning' && (
-                    <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-yellow-400 animate-pulse-slow" title="Currently Learning" />
-                  )}
                 </motion.div>
               )
             })}
           </AnimatePresence>
-        </motion.div>
-
-        {/* Legend */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.8 }}
-          className="flex items-center justify-center gap-6 mt-10 text-xs text-[var(--text-muted)]"
-        >
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse-slow" />
-            Currently Learning
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-400" />
-            Proficient
-          </div>
         </motion.div>
       </div>
     </section>

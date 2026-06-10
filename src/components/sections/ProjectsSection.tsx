@@ -2,35 +2,19 @@
 
 import { useState, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { Github, ExternalLink, Star, ArrowRight, Layers } from 'lucide-react'
+import { Github, ExternalLink, ArrowRight, Layers } from 'lucide-react'
 import { PROJECTS } from '@/lib/data'
 import type { Project } from '@/types'
-
-type Filter = 'all' | 'fullstack' | 'frontend' | 'ai' | 'other'
-
-const FILTERS: { key: Filter; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'fullstack', label: 'Full-Stack' },
-  { key: 'frontend', label: 'Frontend' },
-  { key: 'ai', label: 'AI/ML' },
-]
+import { useEffect } from 'react'
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
-  const [hovered, setHovered] = useState(false)
-
-  const statusColor = {
-    completed: 'bg-green-500/20 text-green-400 border-green-500/30',
-    'in-progress': 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    planned: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-  }
-
-  const categoryEmoji = {
-    fullstack: '🚀',
-    frontend: '🎨',
-    backend: '⚙️',
-    ai: '🤖',
-    other: '✨',
-  }
+  const [currentImage, setCurrentImage] = useState(0)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage(prev => (prev + 1) % project.images.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [project.images.length])
 
   return (
     <motion.div
@@ -39,55 +23,26 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       exit={{ opacity: 0, y: 20, scale: 0.95 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
       layout
-      className={`group relative glass border rounded-2xl overflow-hidden transition-all duration-500 cursor-default flex flex-col ${
-        project.featured
-          ? 'border-purple-500/30 hover:border-purple-500/60 hover:shadow-glow-md'
-          : 'border-border hover:border-[var(--accent-cyan)]/40 hover:shadow-glow-cyan'
-      }`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      className="group relative glass border border-border rounded-2xl overflow-hidden transition-all duration-500 cursor-default flex flex-col hover:border-[var(--accent-cyan)]/40 hover:shadow-glow-cyan"
       whileHover={{ y: -6 }}
     >
       {/* Image/Banner Area */}
       <div className="relative h-48 overflow-hidden bg-gradient-to-br from-purple-900/50 via-[var(--bg-tertiary)] to-cyan-900/30">
         {/* Grid Pattern */}
         <div className="absolute inset-0 grid-bg opacity-40" />
-
-        {/* Placeholder graphic */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            animate={hovered ? { scale: 1.05, rotate: 5 } : { scale: 1, rotate: 0 }}
-            transition={{ duration: 0.4 }}
-            className="text-7xl opacity-30"
-          >
-            {categoryEmoji[project.category]}
-          </motion.div>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="font-display text-5xl font-black gradient-text opacity-20 select-none">
-              {project.title[0]}
-            </div>
-          </div>
-        </div>
-
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-secondary)] via-transparent to-transparent" />
-
-        {/* Featured badge */}
-        {project.featured && (
-          <div className="absolute top-3 left-3 flex items-center gap-1.5 glass border border-yellow-500/30 rounded-full px-3 py-1 text-yellow-400 text-xs font-semibold">
-            <Star size={10} fill="currentColor" />
-            Featured
-          </div>
-        )}
-
-        {/* Status badge */}
-        <div className={`absolute top-3 right-3 glass border rounded-full px-2.5 py-1 text-xs font-mono capitalize ${statusColor[project.status]}`}>
-          {project.status.replace('-', ' ')}
-        </div>
-
-        {/* Category badge */}
-        <div className="absolute bottom-3 left-3 glass border border-border rounded-lg px-2.5 py-1 text-[var(--text-muted)] text-xs font-mono capitalize">
-          {categoryEmoji[project.category]} {project.category}
+        <div className="relative h-64 overflow-hidden bg-black flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={currentImage}
+              src={project.images[currentImage]}
+              alt={project.title}
+              className="absolute inset-0 w-full h-full object-contain bg-black"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            />
+          </AnimatePresence>
         </div>
       </div>
 
@@ -149,13 +104,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 }
 
 export default function ProjectsSection() {
-  const [activeFilter, setActiveFilter] = useState<Filter>('all')
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
-
-  const filtered = activeFilter === 'all'
-    ? PROJECTS
-    : PROJECTS.filter(p => p.category === activeFilter)
 
   return (
     <section id="projects" className="relative py-28 overflow-hidden">
@@ -176,42 +126,14 @@ export default function ProjectsSection() {
             Portfolio
           </div>
           <h2 className="font-display text-4xl md:text-5xl font-bold">
-            <span className="text-[var(--text-primary)]">Featured</span>{' '}
-            <span className="gradient-text">Projects</span>
+          <span className="gradient-text">Selected Projects</span>
           </h2>
-          <p className="text-[var(--text-secondary)] mt-4 max-w-xl mx-auto">
-            Real-world applications built with modern tech stacks. Each project tells a story of problem-solving and craftsmanship.
-          </p>
-        </motion.div>
-
-        {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2 }}
-          className="flex flex-wrap justify-center gap-3 mb-10"
-        >
-          {FILTERS.map(filter => (
-            <motion.button
-              key={filter.key}
-              onClick={() => setActiveFilter(filter.key)}
-              className={`px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 cursor-pointer border ${
-                activeFilter === filter.key
-                  ? 'bg-gradient-to-r from-purple-600 to-cyan-600 text-white border-transparent shadow-glow-sm'
-                  : 'glass border-border text-[var(--text-secondary)] hover:border-[var(--accent-purple)]/30 hover:text-[var(--text-primary)]'
-              }`}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              {filter.label}
-            </motion.button>
-          ))}
         </motion.div>
 
         {/* Projects Grid */}
         <AnimatePresence mode="popLayout">
           <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((project, i) => (
+            {PROJECTS.map((project, i) => (
               <ProjectCard key={project.id} project={project} index={i} />
             ))}
           </motion.div>
