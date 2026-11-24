@@ -1,4 +1,4 @@
-# ✨ Personal Portfolio Website
+# ✨ Portfolio Website
 
 <p align="center">
   <a href="https://tanya-portfolio-pi.vercel.app/">
